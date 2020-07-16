@@ -2,19 +2,32 @@ import express from 'express';
 import { gateway } from 'fabric/gateway';
 import { execute } from 'cli';
 const api = express();
+const envfile = require('envfile');
+const { rootPath } = require('../fabric/utils/helper');
+
+api.get('/channel/discovery', async (req, res, next) => {
+  execute({ ACTION: 'discovery' }).then(({ stdout })=> {
+    res.send(stdout);
+  }).catch(({ stderr }) => {
+    res.status(500).json({ message: stderr });
+  });
+});
 
 api.get('/network', (req, res, next) => {
   // demo bridge between Node.js and Peer cli bash command
   const channels = Array.from(gateway.client.channels.keys());
 
   Promise.all([
-    execute({ ACTION: 'queryInstalled', PEER: 'one' }),
-    execute({ ACTION: 'queryCommitted', PEER: 'one' })
-  ]).then(([installed, committed]) => {
+    execute({ ACTION: 'queryInstalled' }),
+    execute({ ACTION: 'queryCommitted' }),
+    execute({ ACTION: 'checkReadiness' }),
+  ]).then(([installed, committed, readiness]) => {
     res.send({
       channels,
       installed_chaincodes: JSON.parse(installed.stdout).installed_chaincodes,
       chaincode_definitions: JSON.parse(committed.stdout).chaincode_definitions,
+      approvals: JSON.parse(readiness.stdout).approvals,
+      mspId: envfile.parseFileSync(`${rootPath}/webapp/server/.env`).CORE_PEER_LOCALMSPID,
     });
   })
   .catch(next);
@@ -46,6 +59,32 @@ api.post('/chaincode/transaction', async (req, res, next) => {
   } catch(e) {
     res.status(500).json(e.message);
   }
+});
+
+api.post('/chaincode/install', async (req, res, next) => {
+  execute({ ACTION: 'install' }).then(({ stdout })=> {
+    res.send({
+      data: response.stdout,
+    });
+  }).catch(({ stderr }) => {
+    res.status(500).json({ message: stderr });
+  });
+});
+
+api.post('/chaincode/approve', async (req, res, next) => {
+  execute({ ACTION: 'approve', PACKAGE_ID: req.body.package_id }).then(({ stdout })=> {
+    res.send(stdout);
+  }).catch(({ stderr }) => {
+    res.status(500).json({ message: stderr });
+  });
+});
+
+api.post('/chaincode/commit', async (req, res, next) => {
+  execute({ ACTION: 'commit' }).then(({ stdout })=> {
+    res.send(stdout);
+  }).catch(({ stderr }) => {
+    res.status(500).json({ message: stderr });
+  });
 });
 
 export default api;

@@ -1,4 +1,4 @@
-#!/bin/bash
+# #!/bin/bash
 set -e
 
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
@@ -12,6 +12,16 @@ export CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS
 export CORE_PEER_MSPCONFIGPATH=$ROOT_PATH/webapp/certs/$CORE_PEER_MSPCONFIGPATH
 export CORE_PEER_LOCALMSPID=$CORE_PEER_LOCALMSPID
 export CORE_PEER_TLS_ROOTCERT_FILE=$ROOT_PATH/webapp/certs/$CORE_PEER_TLS_ROOTCERT_FILE
+
+discovery() {
+  /etc/hyperledger/bin/discover \
+ --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
+ --userKey "$ROOT_PATH/webapp/certs/RG-996-052-MSP/users/Admin@rg-996-052.int.chainstack.com/msp/keystore/priv_sk" \
+ --userCert "$ROOT_PATH/webapp/certs/RG-996-052-MSP/users/Admin@rg-996-052.int.chainstack.com/msp/signcerts/Admin@rg-996-052.int.chainstack.com-cert.pem" \
+ --MSP "$CORE_PEER_LOCALMSPID" \
+ peers --server "$CORE_PEER_ADDRESS" \
+ --channel "defaultchannel"
+}
 
 installChaincode() {
   /etc/hyperledger/bin/peer lifecycle chaincode package "${ROOT_PATH}/${CHAINCODE_NAME}.tar.gz" \
@@ -49,7 +59,8 @@ checkReadiness() {
   --cafile "$ORDERER_CA" \
   --name "$CHAINCODE_NAME" \
   --version "$CHAINCODE_VERSION" \
-  --sequence "$CHAINCODE_SEQUENCE"
+  --sequence "$CHAINCODE_SEQUENCE" \
+  --output "${OUTPUT}"
   # --init-required \
 }
 
@@ -81,24 +92,16 @@ queryCommitted() {
   --output "${OUTPUT}"
 }
 
-install() {
-  installChaincode
-  getChaincodePackageID
-
-  approveChaincode
-  checkReadiness
-
-  commitChaincode
-  queryCommitted
-}
-
 OUTPUT="plain-text"
 if [[ $ACTION == "install" ]]
 then
-  install
-elif [[ $ACTION == "upgrade" ]]
+  installChaincode
+elif [[ $ACTION == "approve" ]]
 then
-  install
+  approveChaincode
+elif [[ $ACTION == "commit" ]]
+then
+  commitChaincode
 elif [[ $ACTION == "queryCommitted" ]]
 then
   OUTPUT="json"
@@ -107,6 +110,13 @@ elif [[ $ACTION == "queryInstalled" ]]
 then
   OUTPUT="json"
   queryInstalled
+elif [[ $ACTION == "checkReadiness" ]]
+then
+  OUTPUT="json"
+  checkReadiness
+elif [[ $ACTION == "discovery" ]]
+then
+  discovery
 else
   echo "invalid action - ${ACTION}"
 fi

@@ -1,0 +1,81 @@
+<template>
+    <v-tooltip
+      right
+      :disabled="tooltipContent === ''"
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-on="on"
+          :icon="icon"
+          :loading="isLoading"
+          @click="submit"
+        >
+          <v-icon v-if="icon" color="primary">{{ display }}</v-icon>
+          <span v-else>{{ display }}</span>
+        </v-btn>
+      </template>
+      <span>{{ tooltipContent }}</span>
+    </v-tooltip>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'ActionButton',
+
+  props: {
+    action: {
+      type: Object,
+      required: true,
+    },
+
+    display: {
+      type: String,
+      required: true,
+    },
+
+    icon: {
+      type: Boolean,
+      default: false,
+    },
+
+    tooltipContent: {
+      type: String,
+      default: '',
+    },
+  },
+
+  data: () => ({
+    isLoading: false,
+  }),
+
+  methods: {
+    async submit() {
+      this.isLoading = true;
+      const { action, path, parameter } = this.action;
+
+      const parameters = {
+        method: action,
+        url: path,
+      };
+
+      if (parameter) {
+        parameters.data = parameter;
+      }
+
+
+      await axios(parameters)
+        .then(({ data }) => { this.$emit('response', data); })
+        .catch((error) => {
+          window.$eventHub.$emit('showAlert', {
+            type: 'error',
+            message: error.response.data.message,
+          });
+        });
+
+      this.isLoading = false;
+    },
+  },
+};
+</script>
