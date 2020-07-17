@@ -46,6 +46,7 @@ yarn-error.log*
 # fabric
 certs
 wallets
+hlf
 chaincodes/*.tar.gz
 connection-profile.json
 connection-profile?.json
