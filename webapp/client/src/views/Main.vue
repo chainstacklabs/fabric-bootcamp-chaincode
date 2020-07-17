@@ -10,25 +10,23 @@
     </div>
   </v-container>
   <v-container v-else>
+    <p class="title font-weight-bold">{{ mspId }}</p>
     <v-row no-gutters>
-      <p
-        v-if="hasChaincode"
-        class="title font-weight-bold"
-      >Installed chaincode packages</p>
+      <p class="title font-weight-bold" v-if="network.installed_chaincodes">Installed chaincodes</p>
       <v-spacer></v-spacer>
       <ActionButton
-        v-if="!hasChaincode"
+        v-if="!network.installed_chaincodes"
         display="Install Chaincode"
         :action="{ action: 'post', path: '/chaincode/install' }"
-        @response="logData"
-    ></ActionButton>
+        :post-action="getNetwork"
+      ></ActionButton>
     </v-row>
     <v-card class="mx-auto">
       <v-list class="pa-0">
         <v-list-group
-          no-action
-          disabled
           append-icon
+          disabled
+          no-action
           v-for="(item, index) in network.installed_chaincodes"
           value="true"
           :key="index"
@@ -37,20 +35,20 @@
         >
           <template v-slot:activator>
             <v-list-item class="pa-0">
-              <v-list-item-content @click="goTo(item)">
-                <v-list-item-title v-text="item.label"></v-list-item-title>
+              <v-list-item-content @click="goTo(item.details.name)">
+                <v-list-item-title
+                  class="font-weight-bold"
+                  v-text="item.label"
+                ></v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </template>
-          <div v-if="item.references">
-            <code>{{ getDefinition(item.references) }}</code>
-          </div>
-          <div v-else>
+          <div>
             <code>
               Package ID: {{ item.package_id }}
               <ActionButton
                 icon
-                v-if="approvals[mspId] != true"
+                v-if="item.details.approvals && item.details.approvals[mspId] != true"
                 display="mdi-check"
                 tooltip-content="Approve chaincode"
                 :action="{
@@ -58,25 +56,52 @@
                   path: '/chaincode/approve',
                   parameter: { package_id: item.package_id },
                 }"
-                @response="logData"
+                :post-action="getNetwork"
               ></ActionButton>
 
               <ActionButton
                 icon
-                v-else
+                v-else-if="!item.details.name"
                 display="mdi-check-all"
                 tooltip-content="Commit chaincode"
                 :action="{
                   action: 'post',
                   path: '/chaincode/commit',
                 }"
-                @response="logData"
+                :post-action="getNetwork"
               ></ActionButton>
             </code>
+            <code>{{ item.details }}</code>
           </div>
         </v-list-group>
       </v-list>
-      <code>{{ approvals }}</code>
+    </v-card>
+
+    <p class="title font-weight-bold my-4">Fabric channel details</p>
+
+    <v-card class="mx-auto">
+      <v-list class="pa-0">
+        <v-list-group
+          no-action
+          v-for="config in configs"
+          :key="config.type"
+          value="true"
+        >
+          <template v-slot:activator>
+            <v-list-item class="pa-0">
+              <v-list-item-content>
+                <v-list-item-title
+                  class="font-weight-bold"
+                  v-text="config.display"
+                ></v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <code>
+            <tree-view :data="network[config.type]" :options="{maxDepth: 2}"></tree-view>
+          </code>
+        </v-list-group>
+      </v-list>
     </v-card>
   </v-container>
 </template>
@@ -95,56 +120,42 @@ export default {
   created() {
     this.getNetwork()
       .finally(() => {
-        this.poll();
         this.loadComplete = true;
+        this.poll();
       });
   },
 
   data: () => ({
     network: {},
-    channel: null,
     loadComplete: false,
-    approvals: {},
     mspId: null,
+    configs: [{ type: 'config', display: 'Channel config' }, { type: 'peers', display: 'Channel peers' }],
   }),
 
-  computed: {
-    hasChaincode() {
-      return this.network.installed_chaincodes && this.network.installed_chaincodes.length > 0;
-    },
-  },
-
   methods: {
-    logData(data) {
-      console.log(data);
-    },
-
     poll() {
-      setInterval(this.getNetwork, 20000);
+      setInterval(this.getNetwork, 10000);
     },
 
-    getDefinition(references) {
-      const chaincodeName = references[this.channel].chaincodes[0].name;
-
-      return this.network.chaincode_definitions.find(({ name }) => name === chaincodeName);
-    },
-
-    goTo({ references }) {
-      if (references) {
-        const { name } = this.getDefinition(references);
-        this.$router.push({ name: 'Chaincode', params: { chaincode: name } })
-          .catch(() => {});
-      }
+    goTo(name) {
+      this.$router.push({ name: 'Chaincode', params: { chaincode: name } })
+        .catch(() => {});
     },
 
     getNetwork() {
       return axios.get('/network')
         .then(({ data }) => {
           this.network = data;
-          const [channel] = data.channels;
-          this.channel = channel;
-          this.approvals = data.approvals;
           this.mspId = data.mspId;
+        })
+        .catch((error) => {
+          window.$eventHub.$emit('showAlert', {
+            type: 'error',
+            message: error.response.data.message,
+          });
+        })
+        .finally(() => {
+          this.loadComplete = true;
         });
     },
   },
@@ -161,9 +172,14 @@ export default {
   }
   code {
     padding: 10px 16px !important;
-    color: black !important;
+    // color: black !important;
+    word-wrap: break-word !important;
     &:before {
       content: '' !important;
+    }
+
+    &:after {
+      content: none !important;
     }
 
     border-radius: 0 !important;

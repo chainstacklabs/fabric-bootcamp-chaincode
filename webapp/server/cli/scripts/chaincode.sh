@@ -1,4 +1,4 @@
-# #!/bin/bash
+#!/bin/bash
 set -e
 
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
@@ -8,19 +8,32 @@ export ORDERER_CA=$ROOT_PATH/webapp/certs/$ORDERER_CA
 export ORDERER_ADDRESS=$ORDERER_ADDRESS
 export CORE_PEER_TLS_ENABLED=$CORE_PEER_TLS_ENABLED
 
+export ORG_ID=$ORG_ID
+export ADMIN_CERT=$ADMIN_CERT
+export ADMIN_PRIVATE_KEY=$ADMIN_PRIVATE_KEY
 export CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS
 export CORE_PEER_MSPCONFIGPATH=$ROOT_PATH/webapp/certs/$CORE_PEER_MSPCONFIGPATH
 export CORE_PEER_LOCALMSPID=$CORE_PEER_LOCALMSPID
 export CORE_PEER_TLS_ROOTCERT_FILE=$ROOT_PATH/webapp/certs/$CORE_PEER_TLS_ROOTCERT_FILE
 
-discovery() {
+discoverPeers() {
   /etc/hyperledger/bin/discover \
- --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
- --userKey "$ROOT_PATH/webapp/certs/RG-996-052-MSP/users/Admin@rg-996-052.int.chainstack.com/msp/keystore/priv_sk" \
- --userCert "$ROOT_PATH/webapp/certs/RG-996-052-MSP/users/Admin@rg-996-052.int.chainstack.com/msp/signcerts/Admin@rg-996-052.int.chainstack.com-cert.pem" \
- --MSP "$CORE_PEER_LOCALMSPID" \
- peers --server "$CORE_PEER_ADDRESS" \
- --channel "defaultchannel"
+  --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
+  --userKey "$ROOT_PATH/webapp/certs/$ADMIN_PRIVATE_KEY" \
+  --userCert "$ROOT_PATH/webapp/certs/$ADMIN_CERT" \
+  --MSP "$CORE_PEER_LOCALMSPID" \
+  peers --server "$CORE_PEER_ADDRESS" \
+  --channel "defaultchannel"
+}
+
+discoverConfig() {
+  /etc/hyperledger/bin/discover \
+  --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
+  --userKey "$ROOT_PATH/webapp/certs/$ADMIN_PRIVATE_KEY" \
+  --userCert "$ROOT_PATH/webapp/certs/$ADMIN_CERT" \
+  --MSP "$CORE_PEER_LOCALMSPID" \
+  config --server "$CORE_PEER_ADDRESS" \
+  --channel "defaultchannel"
 }
 
 installChaincode() {
@@ -65,6 +78,8 @@ checkReadiness() {
 }
 
 commitChaincode() {
+  PEER_ADDRESSES_LIST=(${PEER_ADDRESSES}) && 
+  TLS_ROOTCERT_FILES_LIST=(${TLS_ROOTCERT_FILES}) && 
   /etc/hyperledger/bin/peer lifecycle chaincode commit -o "$ORDERER_ADDRESS" \
   --channelID "$CHANNEL_ID" \
   --name "$CHAINCODE_NAME" \
@@ -72,8 +87,8 @@ commitChaincode() {
   --sequence "$CHAINCODE_SEQUENCE" \
   --tls \
   --cafile "$ORDERER_CA" \
-  --peerAddresses $CORE_PEER_ADDRESS \
-  --tlsRootCertFiles $CORE_PEER_TLS_ROOTCERT_FILE
+  ${PEER_ADDRESSES_LIST[@]/#/ --peerAddresses } \
+  ${TLS_ROOTCERT_FILES_LIST[@]/#/ --tlsRootCertFiles }
   # --init-required \
 }
 
@@ -114,9 +129,12 @@ elif [[ $ACTION == "checkReadiness" ]]
 then
   OUTPUT="json"
   checkReadiness
-elif [[ $ACTION == "discovery" ]]
+elif [[ $ACTION == "discoverConfig" ]]
 then
-  discovery
+  discoverConfig
+elif [[ $ACTION == "discoverPeers" ]]
+then
+  discoverPeers
 else
   echo "invalid action - ${ACTION}"
 fi

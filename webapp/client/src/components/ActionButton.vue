@@ -44,6 +44,11 @@ export default {
       type: String,
       default: '',
     },
+
+    postAction: {
+      type: Function,
+      default: () => {},
+    },
   },
 
   data: () => ({
@@ -64,9 +69,9 @@ export default {
         parameters.data = parameter;
       }
 
-
       await axios(parameters)
         .then(({ data }) => { this.$emit('response', data); })
+        .then(async () => { await this.postAction(); })
         .catch((error) => {
           window.$eventHub.$emit('showAlert', {
             type: 'error',
