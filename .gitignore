@@ -45,6 +45,7 @@ yarn-error.log*
 
 # fabric
 certs
+!webapp/certs/.keep
 wallets
 hlf
 chaincodes/*.tar.gz
