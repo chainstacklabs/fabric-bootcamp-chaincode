@@ -134,7 +134,7 @@ export default {
 
   methods: {
     poll() {
-      setInterval(this.getNetwork, 10000);
+      // setInterval(this.getNetwork, 10000);
     },
 
     goTo(name) {

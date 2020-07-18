@@ -17,6 +17,6 @@ curl -sSL https://github.com/hyperledger/fabric/releases/download/v${FABRIC_VERS
     | tar xz -C ${FABRIC_PATH}
 curl -sSL https://github.com/hyperledger/fabric/archive/v${FABRIC_VERSION}.tar.gz \
     | tar xz -C ${FABRIC_SOURCES_PATH}
-mv --force ${FABRIC_SOURCES_PATH}/fabric-${FABRIC_VERSION}/sampleconfig/* ${FABRIC_CFG_PATH}
+mv ${FABRIC_SOURCES_PATH}/fabric-${FABRIC_VERSION}/sampleconfig/* ${FABRIC_CFG_PATH}
 rm -rf ${FABRIC_SOURCES_PATH}
 ls ${FABRIC_BIN_PATH}

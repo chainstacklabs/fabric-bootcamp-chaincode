@@ -52,7 +52,11 @@ api.get('/network', (req, res, next) => {
 
     res.send(data);
   })
-  .catch(next);
+  .catch((error) => {
+    console.log(error);
+
+    next(error);
+  });
 });
 
 api.get('/chaincode/:chaincode', async (req, res, next) => {

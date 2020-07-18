@@ -7,36 +7,31 @@ FABRIC_PATH="$(dirname "$0")/../../../../hlf"
 
 export FABRIC_BIN_PATH="${FABRIC_PATH}/bin"
 export FABRIC_CFG_PATH="${FABRIC_PATH}/config"
-export ORDERER_CA=$ROOT_PATH/webapp/certs/$ORDERER_CA
-export ORDERER_ADDRESS=$ORDERER_ADDRESS
-export CORE_PEER_TLS_ENABLED=$CORE_PEER_TLS_ENABLED
 
-export ORG_ID=$ORG_ID
-export ADMIN_CERT=$ADMIN_CERT
-export ADMIN_PRIVATE_KEY=$ADMIN_PRIVATE_KEY
-export CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS
-export CORE_PEER_MSPCONFIGPATH=$ROOT_PATH/webapp/certs/$CORE_PEER_MSPCONFIGPATH
-export CORE_PEER_LOCALMSPID=$CORE_PEER_LOCALMSPID
-export CORE_PEER_TLS_ROOTCERT_FILE=$ROOT_PATH/webapp/certs/$CORE_PEER_TLS_ROOTCERT_FILE
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_ADDRESS=$PEER_ADDRESS
+export CORE_PEER_LOCALMSPID=$MSP_ID
+export CORE_PEER_MSPCONFIGPATH=$MSP_PATH
+export CORE_PEER_TLS_ROOTCERT_FILE=$PEER_TLS_ROOTCERT_FILE
 
 discoverPeers() {
    ${FABRIC_BIN_PATH}/discover \
-  --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
-  --userKey "$ROOT_PATH/webapp/certs/$ADMIN_PRIVATE_KEY" \
-  --userCert "$ROOT_PATH/webapp/certs/$ADMIN_CERT" \
-  --MSP "$CORE_PEER_LOCALMSPID" \
-  peers --server "$CORE_PEER_ADDRESS" \
-  --channel "defaultchannel"
+  --peerTLSCA "$PEER_TLS_ROOTCERT_FILE" \
+  --userKey "$ADMIN_PRIVATE_KEY" \
+  --userCert "$ADMIN_CERT" \
+  --MSP "$MSP_ID" \
+  peers --server "$PEER_ADDRESS" \
+  --channel "$CHANNEL_ID"
 }
 
 discoverConfig() {
   ${FABRIC_BIN_PATH}/discover \
-  --peerTLSCA "$CORE_PEER_TLS_ROOTCERT_FILE" \
-  --userKey "$ROOT_PATH/webapp/certs/$ADMIN_PRIVATE_KEY" \
-  --userCert "$ROOT_PATH/webapp/certs/$ADMIN_CERT" \
-  --MSP "$CORE_PEER_LOCALMSPID" \
-  config --server "$CORE_PEER_ADDRESS" \
-  --channel "defaultchannel"
+  --peerTLSCA "$PEER_TLS_ROOTCERT_FILE" \
+  --userKey "$ADMIN_PRIVATE_KEY" \
+  --userCert "$ADMIN_CERT" \
+  --MSP "$MSP_ID" \
+  config --server "$PEER_ADDRESS" \
+  --channel "$CHANNEL_ID"
 }
 
 installChaincode() {
@@ -60,7 +55,7 @@ approveChaincode() {
   --name "$CHAINCODE_NAME" \
   --package-id "$PACKAGE_ID" -o "$ORDERER_ADDRESS" \
   --tls \
-  --tlsRootCertFiles "$CORE_PEER_TLS_ROOTCERT_FILE" \
+  --tlsRootCertFiles "$PEER_TLS_ROOTCERT_FILE" \
   --cafile "$ORDERER_CA" \
   --version "$CHAINCODE_VERSION" \
   --channelID "$CHANNEL_ID" \
@@ -105,8 +100,8 @@ queryCommitted() {
   --channelID "$CHANNEL_ID" \
   --tls \
   --cafile "$ORDERER_CA" \
-  --peerAddresses "$CORE_PEER_ADDRESS" \
-  --tlsRootCertFiles "$CORE_PEER_TLS_ROOTCERT_FILE" \
+  --peerAddresses "$PEER_ADDRESS" \
+  --tlsRootCertFiles "$PEER_TLS_ROOTCERT_FILE" \
   --output "${OUTPUT}"
 }
 

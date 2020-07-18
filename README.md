@@ -1,12 +1,10 @@
-# Freedom dividend chaincode
+# Fabric bootcamp
 
-A starter template for building a complete Hyperledger Fabric v2 application using Node.js and Vue.js with some included packages and configurations to help jumpstart the development process.
+This project contains the webapp that we will be spinnnig and connecting to the Hyperledger Fabric network we will be deploying on [Chainstack](https://chainstack.com).
 
 There are two parts of this project, a [web app](https://chainstack.com/deploy-a-hyperledger-fabric-v2-web-app-using-sdk-for-node-js/) and a [contract](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode), and each part is contained in its own respective folder.
 
-Major packages are inlcuded and configured (as required).
-
-## Contract
+## Chaincode
 
 - Includes a sample JavaScript chaincode with 3 transactions:
   - optIn
@@ -15,28 +13,19 @@ Major packages are inlcuded and configured (as required).
 
 See also the [chaincode tutorial](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode).
 
-## Web app
-
-### Backend
-
-#### Highlights
-
-- Includes a bash script that automates peer chaincode lifecycle for installing and upgrading chaincodes.
-- Includes an API endpoint to bridge Node.js and Hyperledger Fabric v2 network using the bash script.
-- Includes a sample implementation of Hyperledger Fabric SDK v2.1 for creating gateway and wallets.
-
-[Build Setup](./webapp/server/README.md)
-
-By default, this application is configured to work out of the box with a Hyperledger Fabric v2 network deployed on Chainstack, but by
-doing minor changes you can easily switch to a network deployed on your local machine.
-
-### Frontend
-
-#### Highlights
-
-- Automatically retrieves and displays the installed packages and chaincode from the backend.
-- Automatically generates forms based on installed chaincode.
-
-[Build Setup](./webapp/client/README.md)
+## Quick start
+1. Setup environment
+    - Install Node.js 12.13.1 or higher.
+    - Install NPM 6 or higher.
+    - Sudo bash downloadPeerBinary.sh
+    - Replace `ORDERER_NAME`, `PEER_NAME` and `MSP_ID` in the `.env` file.
+1. Setup client
+    - cd webapp/client
+    - npm i
+    - npm run build
+1. Setup Server
+    - cd webapp/server
+    - npm i
+    - npm run start
 
 See also the [web app tutorial](https://chainstack.com/deploy-a-hyperledger-fabric-v2-web-app-using-sdk-for-node-js/).
