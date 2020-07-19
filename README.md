@@ -17,11 +17,12 @@ For details, see the [chaincode tutorial](https://docs.chainstack.com/tutorials/
 
 ## Prepare for the bootcamp
 
+### Prerequisites
+* Linux or macOS
+* Node.js 12.13.1 or higher
+* NPM 6 or higher
+
 ### Set up your environment (required)
-
-Install Node.js 12.13.1 or higher.
-
-Install NPM 6 or higher.
 
 From the project root directory, run `sudo bash downloadPeerBinary.sh` to download the Hyperledger Fabric peer binaries. Note that this might take some time.
 
