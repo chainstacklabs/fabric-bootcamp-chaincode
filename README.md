@@ -26,8 +26,6 @@ For details, see the [chaincode tutorial](https://docs.chainstack.com/tutorials/
 
 From the project root directory, run `sudo bash downloadPeerBinary.sh` to download the Hyperledger Fabric peer binaries. Note that this might take some time.
 
-Rename the `webapp/server/.env.template` file to `webapp/server/.env`.
-
 In the `.env` file, replace the `ORDERER_NAME`, `PEER_NAME`, and `MSP_ID` variables with:
 
 * `ORDERER_NAME` — the orderer name of the network you deployed your node in. To access the orderer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric network, click **Details**, copy the **Orderer name** value.

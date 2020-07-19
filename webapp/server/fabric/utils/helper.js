@@ -47,6 +47,7 @@ const generateCertPath = async () => {
     MSP_PATH: `${certDirectoryPath}/${MSP_ID}/users/${adminFolder}/msp`,
     PEER_ADDRESS: `${PEER_NAME}:7051`,
     PEER_TLS_ROOTCERT_FILE: `${certDirectoryPath}/${MSP_ID}/peers/${PEER_NAME}/tls/ca.crt`,
+    ROOT_PATH: rootPath,
   });
 };
 

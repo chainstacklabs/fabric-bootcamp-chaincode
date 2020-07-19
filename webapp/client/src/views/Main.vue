@@ -21,21 +21,19 @@
         :post-action="getNetwork"
       ></ActionButton>
     </v-row>
+
     <v-card class="mx-auto">
       <v-list class="pa-0">
         <v-list-group
-          append-icon
-          disabled
           no-action
           v-for="(item, index) in network.installed_chaincodes"
           value="true"
           :key="index"
           :class="{ disable_link: !item.references }"
-          :ripple="item.references !== undefined"
         >
           <template v-slot:activator>
             <v-list-item class="pa-0">
-              <v-list-item-content @click="goTo(item.details.name)">
+              <v-list-item-content>
                 <v-list-item-title
                   class="font-weight-bold"
                   v-text="item.label"
@@ -72,6 +70,10 @@
               ></ActionButton>
             </code>
             <code>{{ item.details }}</code>
+            <v-card-actions v-if="item.committed">
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="goTo(item.details.name)">Access Chaincode</v-btn>
+            </v-card-actions>
           </div>
         </v-list-group>
       </v-list>
@@ -134,7 +136,7 @@ export default {
 
   methods: {
     poll() {
-      // setInterval(this.getNetwork, 10000);
+      setInterval(this.getNetwork, 10000);
     },
 
     goTo(name) {

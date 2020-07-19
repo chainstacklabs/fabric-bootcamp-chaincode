@@ -26,19 +26,22 @@ api.get('/network', (req, res, next) => {
       chaincode_definitions: JSON.parse(committed.stdout).chaincode_definitions,
       config: JSON.parse(config.stdout),
       peers: JSON.parse(peers.stdout),
-      mspId: envfile.parseFileSync(`${rootPath}/webapp/server/.env`).CORE_PEER_LOCALMSPID,
+      mspId: envfile.parseFileSync(`${rootPath}/webapp/server/.env`).MSP_ID,
     };
   })
   .then(async (data) => {
     if (data.installed_chaincodes) {
       for (const [key, chaincode] of data.installed_chaincodes.entries()) {
         const committed = null;
+        data.installed_chaincodes[key].committed = false;
+
         if (data.chaincode_definitions) {
           committed = data.chaincode_definitions.find(({ name, version}) => {
             return `${name}${version}` === chaincode.label;
           });
 
           data.installed_chaincodes[key].details = committed;
+          data.installed_chaincodes[key].committed = true;
         }
 
         if (!committed) {
@@ -52,11 +55,7 @@ api.get('/network', (req, res, next) => {
 
     res.send(data);
   })
-  .catch((error) => {
-    console.log(error);
-
-    next(error);
-  });
+  .catch(next);
 });
 
 api.get('/chaincode/:chaincode', async (req, res, next) => {
@@ -67,7 +66,11 @@ api.get('/chaincode/:chaincode', async (req, res, next) => {
     const contract = await network.getContract(req.params.chaincode);
     const response = await contract.evaluateTransaction('org.hyperledger.fabric:GetMetadata');
 
-    res.send(JSON.parse(response.toString()));
+
+    res.send({
+      mspId: envfile.parseFileSync(`${rootPath}/webapp/server/.env`).MSP_ID,
+      contract: JSON.parse(response.toString()),
+    });
   } catch(e) {
     res.status(500).json(e.message);
   }
