@@ -1,42 +1,61 @@
-# Freedom dividend chaincode
+# Chainstack Blockchain Bootcamp: Build Enterprise Applications with Hyperledger Fabric v2
 
-A starter template for building a complete Hyperledger Fabric v2 application using Node.js and Vue.js with some included packages and configurations to help jumpstart the development process.
+This project contains the web app that we will be spinnnig and connecting to the Hyperledger Fabric network deployed on [Chainstack](https://chainstack.com).
 
-There are two parts of this project, a [web app](https://chainstack.com/deploy-a-hyperledger-fabric-v2-web-app-using-sdk-for-node-js/) and a [contract](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode), and each part is contained in its own respective folder.
-
-Major packages are inlcuded and configured (as required).
+This is a two-part project:
+* [Web app](https://chainstack.com/deploy-a-hyperledger-fabric-v2-web-app-using-sdk-for-node-js/) in the `webapp` directory.
+* [Contract](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode) in the `contract` directory.
 
 ## Contract
 
-- Includes a sample JavaScript chaincode with 3 transactions:
-  - optIn
-  - optOut
-  - querySSN
+The contract is a sample JavaScript chaincode with 3 transactions:
+  - `optIn`
+  - `optOut`
+  - `querySSN`
 
-See also the [chaincode tutorial](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode).
+For details, see the [chaincode tutorial](https://docs.chainstack.com/tutorials/fabric/universal-basic-income-opt-in-chaincode#universal-basic-income-opt-in-chaincode).
 
-## Web app
+## Prepare for the bootcamp
 
-### Backend
+### Prerequisites
+* Linux or macOS
+* Node.js 12.13.1 or higher
+* NPM 6 or higher
 
-#### Highlights
+### Set up your environment (required)
 
-- Includes a bash script that automates peer chaincode lifecycle for installing and upgrading chaincodes.
-- Includes an API endpoint to bridge Node.js and Hyperledger Fabric v2 network using the bash script.
-- Includes a sample implementation of Hyperledger Fabric SDK v2.1 for creating gateway and wallets.
+From the project root directory, run `sudo bash downloadPeerBinary.sh` to download the Hyperledger Fabric peer binaries. Note that this might take some time.
 
-[Build Setup](./webapp/server/README.md)
+In the `.env` file, replace the `ORDERER_NAME`, `PEER_NAME`, and `MSP_ID` variables with:
 
-By default, this application is configured to work out of the box with a Hyperledger Fabric v2 network deployed on Chainstack, but by
-doing minor changes you can easily switch to a network deployed on your local machine.
+* `ORDERER_NAME` — the orderer name of the network you deployed your node in. To access the orderer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric network, click **Details**, copy the **Orderer name** value.
+* `PEER_NAME` — the peer name of the node that you deployed. To access the peer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric node, copy the **Peer name** value.
+* `MSP_ID` — the Membership Service Provider identity (MSP ID) of the node that you deployed. To access the MSP ID—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric node, copy the **MSP ID** value.
 
-### Frontend
+You are now ready for the bootcamp.
 
-#### Highlights
+### Set up your environment (optional)
 
-- Automatically retrieves and displays the installed packages and chaincode from the backend.
-- Automatically generates forms based on installed chaincode.
+Additionally, you may want to prepare the web app client and server in advance—although this is not required, as this will be done during the bootcamp.
 
-[Build Setup](./webapp/client/README.md)
+Set up the web app client:
+
+```sh
+cd webapp/client
+npm i
+npm run build
+```
+
+Set up the web app server:
+
+```sh
+cd webapp/server
+npm i
+npm start
+```
+
+## Additional information
+
+If you have any difficulties or have questions, [talk to us on Gitter](https://gitter.im/chainstack/fabric-bootcamp).
 
 See also the [web app tutorial](https://chainstack.com/deploy-a-hyperledger-fabric-v2-web-app-using-sdk-for-node-js/).

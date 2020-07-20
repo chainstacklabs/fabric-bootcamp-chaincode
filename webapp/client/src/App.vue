@@ -19,7 +19,7 @@
       <v-snackbar
         v-model="showAlert"
         :color="alertMessage.type"
-        :timeout="3000"
+        :timeout="10000"
       >
         {{ alertMessage.message }}
       </v-snackbar>

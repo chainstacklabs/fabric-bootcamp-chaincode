@@ -1,3 +1,4 @@
+const envfile = require('envfile');
 const fs = require('fs');
 const path = require('path');
 
@@ -6,7 +7,70 @@ const rootPath = process.cwd().includes('webapp')
   : `${process.cwd()}/`;
 const seralizePath = fileName => fs.readFileSync(path.resolve(__dirname, fileName), 'utf8');
 
+const getDirectory = (folderPath) => {
+  return fs.promises.readdir(folderPath, (err, data) => {
+    if (err) throw err;
+
+    return data;
+  });
+};
+
+const generateCertPath = async () => {
+  const {
+    CHANNEL_ID,
+    CHAINCODE_NAME,
+    CHAINCODE_VERSION,
+    CHAINCODE_SEQUENCE,
+    ORDERER_NAME,
+    MSP_ID,
+    PEER_NAME,
+  } = envfile.parseFileSync(`${rootPath}/webapp/server/.env`);
+  const certDirectoryPath = `${rootPath}/webapp/certs/`;
+
+  const [adminFolder] = await getDirectory(`${rootPath}/webapp/certs/${MSP_ID}/users`);
+  const ADMIN_CERT = await getDirectory(`${rootPath}/webapp/certs/${MSP_ID}/users/${adminFolder}/msp/admincerts`).then(([certName]) => {
+    return `${certDirectoryPath}/${MSP_ID}/users/${adminFolder}/msp/admincerts/${certName}`;
+  });
+  const ADMIN_PRIVATE_KEY = `${certDirectoryPath}/${MSP_ID}/users/${adminFolder}/msp/keystore/priv_sk`;
+  const ordererName = ORDERER_NAME.split('.').shift();
+
+  return ({
+    ADMIN_CERT,
+    ADMIN_PRIVATE_KEY,
+    CHANNEL_ID,
+    CHAINCODE_NAME,
+    CHAINCODE_VERSION,
+    CHAINCODE_SEQUENCE,
+    ORDERER_CA: `${certDirectoryPath}/${ordererName}-cert.pem`,
+    ORDERER_ADDRESS: `${ORDERER_NAME}:7050`,
+    MSP_ID,
+    MSP_PATH: `${certDirectoryPath}/${MSP_ID}/users/${adminFolder}/msp`,
+    PEER_ADDRESS: `${PEER_NAME}:7051`,
+    PEER_TLS_ROOTCERT_FILE: `${certDirectoryPath}/${MSP_ID}/peers/${PEER_NAME}/tls/ca.crt`,
+    ROOT_PATH: rootPath,
+  });
+};
+
+const flushTmpFolder = () => {
+  return fs.promises.rmdir(`${rootPath}/webapp/certs/tmp`, { recursive: true }, (err) => {
+    if (err) { throw err; }
+  });
+};
+
+const makeTmpFolder = async () => {
+  if (fs.existsSync(`${rootPath}/webapp/certs/tmp`)){
+    await flushTmpFolder();
+  }
+  return fs.promises.mkdir(`${rootPath}/webapp/certs/tmp`, (err) => {
+    if (err) { throw err; }
+  });
+};
+
 module.exports = {
+  flushTmpFolder,
+  getDirectory,
+  generateCertPath,
+  makeTmpFolder,
   seralizePath,
   rootPath,
 };
