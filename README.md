@@ -38,6 +38,15 @@ You are now ready for the bootcamp.
 
 Additionally, you may want to prepare the web app client and server in advance—although this is not required, as this will be done during the bootcamp.
 
+In the `webapp` directory, create a `certs` directory.
+
+In the [Chainstack UI](https://console.chainstack.com/):
+
+* Navigate to your Hyperledger Fabric network, click **Details**. Click **Export orderer TLS certificate**. Click **Export connection profile**.
+* Navigate to your Hyperledger Fabric node. Next to **Organization identity**, click **Export**.
+
+Copy the three exported files to the `webapp/certs/` directory you created previously.
+
 Set up the web app client:
 
 ```sh
