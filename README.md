@@ -43,7 +43,7 @@ In the `webapp` directory, create a `certs` directory.
 In the [Chainstack UI](https://console.chainstack.com/):
 
 * Navigate to your Hyperledger Fabric network, click **Details**. Click **Export orderer TLS certificate**. Click **Export connection profile**.
-* Navigate to your Hyperledger Fabric node. Next to **Organization identity**, click **Export**.
+* Navigate to your Hyperledger Fabric node. Next to **Organization identity**, click **Export**. Unzip the downloaded file.
 
 Copy the three exported files to the `webapp/certs/` directory you created previously.
 
