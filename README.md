@@ -24,7 +24,12 @@ For details, see the [chaincode tutorial](https://docs.chainstack.com/tutorials/
 
 ### Set up your environment (required)
 
-From the project root directory, run `sudo bash downloadPeerBinary.sh` to download the Hyperledger Fabric peer binaries. Note that this might take some time.
+From the project root directory, download the Hyperledger Fabric peer binaries by running:
+
+* Linux `sudo bash downloadPeerBinary.sh linux`
+* macOS `sudo bash downloadPeerBinary.sh`
+
+Note that downloading the binaries will take some time.
 
 In the `webapp/server/.env` file, replace the `ORDERER_NAME`, `PEER_NAME`, and `MSP_ID` variables with:
 
