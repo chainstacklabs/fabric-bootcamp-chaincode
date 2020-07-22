@@ -12,6 +12,7 @@ const execute = async (ARGS) => {
       certs,
       ARGS,
     ),
+    maxBuffer: 10 * 1024 * 1024
   });
 };
 
