@@ -26,8 +26,8 @@ For details, see the [chaincode tutorial](https://docs.chainstack.com/tutorials/
 
 From the project root directory, download the Hyperledger Fabric peer binaries by running:
 
-* Linux `sudo bash downloadPeerBinary.sh linux`
-* macOS `sudo bash downloadPeerBinary.sh`
+* Linux `bash downloadPeerBinary.sh linux`
+* macOS `bash downloadPeerBinary.sh`
 
 Note that downloading the binaries will take some time.
 
