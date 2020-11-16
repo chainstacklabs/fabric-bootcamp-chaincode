@@ -105,8 +105,31 @@ queryCommitted() {
   --output "${OUTPUT}"
 }
 
+queryApproved() {
+  ${FABRIC_BIN_PATH}/peer lifecycle chaincode queryapproved -o "$ORDERER_ADDRESS" \
+  --channelID "$CHANNEL_ID" \
+  --name "$CHAINCODE_NAME" \
+  --output "${OUTPUT}"
+}
+
+invokeChaincode() {
+  PEER_ADDRESSES_LIST=(${PEER_ADDRESSES}) && 
+  TLS_ROOTCERT_FILES_LIST=(${TLS_ROOTCERT_FILES}) && 
+  ${FABRIC_BIN_PATH}/peer chaincode invoke -o "$ORDERER_ADDRESS" \
+  --tls \
+  --cafile "$ORDERER_CA" \
+  --channelID "$CHANNEL_ID" \
+  --name "$CHAINCODE_NAME" \
+  ${PEER_ADDRESSES_LIST[@]/#/ --peerAddresses } \
+  ${TLS_ROOTCERT_FILES_LIST[@]/#/ --tlsRootCertFiles } \
+  -c "{\"Args\": ${ARGS}}"
+}
+
 OUTPUT="plain-text"
-if [[ $ACTION == "install" ]]
+if [[ $ACTION == "invoke" ]]
+then
+  invokeChaincode
+elif [[ $ACTION == "install" ]]
 then
   installChaincode
 elif [[ $ACTION == "approve" ]]
@@ -123,6 +146,10 @@ elif [[ $ACTION == "queryInstalled" ]]
 then
   OUTPUT="json"
   queryInstalled
+elif [[ $ACTION == "queryApproved" ]]
+then
+  OUTPUT="json"
+  queryApproved
 elif [[ $ACTION == "checkReadiness" ]]
 then
   OUTPUT="json"

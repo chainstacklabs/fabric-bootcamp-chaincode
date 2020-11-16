@@ -32,10 +32,9 @@ From the project root directory, download the Hyperledger Fabric peer binaries b
 Note that downloading the binaries will take some time.
 
 In the `webapp/server/.env` file, replace the `ORDERER_NAME`, `PEER_NAME`, and `MSP_ID` variables with:
-
-* `ORDERER_NAME` — the orderer name of the network you deployed your node in. To access the orderer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric network, click **Details**, copy the **Orderer name** value.
-* `PEER_NAME` — the peer name of the node that you deployed. To access the peer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric node, copy the **Peer name** value.
-* `MSP_ID` — the Membership Service Provider identity (MSP ID) of the node that you deployed. To access the MSP ID—in the [Chainstack UI](https://console.chainstack.com/), navigate to your Hyperledger Fabric node, copy the **MSP ID** value.
+* `ORDERER_NAME` — the orderer name of the network you deployed your peer in. To access the orderer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to Hyperledger Fabric **service nodes** tab from the network, access **Orderer**, copy the **Orderer name** value.
+* `PEER_NAME` — the peer name of the peer that you deployed. To access the peer name—in the [Chainstack UI](https://console.chainstack.com/), navigate to the Hyperledger Fabric **Peer nodes** tab from the network, access your peer and copy the **Peer name** value.
+* `MSP_ID` — the Membership Service Provider identity (MSP ID) of the peer that you deployed. To access the MSP ID—in the [Chainstack UI](https://console.chainstack.com/), navigate to the Hyperledger Fabric **Peer nodes** tab from the network, access your peer and copy the **MSP ID** value.
 
 You are now ready for the bootcamp.
 
@@ -43,16 +42,9 @@ You are now ready for the bootcamp.
 
 Additionally, you may want to prepare the web app client and server in advance—although this is not required, as this will be done during the bootcamp.
 
-In the `webapp` directory, create a `certs` directory.
+1. Export the [required files](./webapp/certs/README.md) from [Chainstack UI](https://console.chainstack.com/).
 
-In the [Chainstack UI](https://console.chainstack.com/):
-
-* Navigate to your Hyperledger Fabric network, click **Details**. Click **Export orderer TLS certificate**. Click **Export connection profile**.
-* Navigate to your Hyperledger Fabric node. Next to **Organization identity**, click **Export**. Unzip the downloaded file.
-
-Copy the three exported files to the `webapp/certs/` directory you created previously.
-
-Set up the web app client:
+1. Set up the web app client:
 
 ```sh
 cd webapp/client
@@ -60,7 +52,7 @@ npm i
 npm run build
 ```
 
-Set up the web app server:
+1. Set up the web app server:
 
 ```sh
 cd webapp/server

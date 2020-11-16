@@ -13,8 +13,23 @@
               :label="parameter.description"
             ></v-text-field>
           </v-col>
-          <v-btn :disabled="!valid" color="primary" class="mr-4" @click="submit" :loading="loading">
+          <v-btn
+            class="mr-4"
+            color="primary"
+            :disabled="!valid"
+            :loading="loading"
+            @click="submit(false)"
+          >
             {{ transaction.name }}
+          </v-btn>
+          <v-btn
+            class="mr-4"
+            color="primary"
+            :disabled="!valid"
+            :loading="loading"
+            @click="submit(true)"
+          >
+            {{ transaction.name }} (SDK)
           </v-btn>
         </v-row>
       </v-card>
@@ -65,9 +80,10 @@ export default {
       this.$refs.form.reset();
     },
 
-    submit() {
+    submit(sdk) {
+      const endpoint = sdk ? '/chaincode/sdk/transaction' : '/chaincode/transaction';
       this.loading = true;
-      axios.post('/chaincode/transaction', {
+      axios.post(endpoint, {
         contract: this.$route.params.chaincode,
         args: [this.transaction.name].concat(Object.values(this.values)),
       })
@@ -80,6 +96,8 @@ export default {
 
           if (data) {
             this.response = JSON.stringify(data);
+          } else {
+            this.response = null;
           }
           this.reset();
         })
