@@ -1,6 +1,6 @@
 ### Export the required files:
 
-In the [Chainstack Platform](https://console.chainstack.com/):
+In the [Chainstack platform](https://console.chainstack.com/):
 
 1. Network connection profile:
     - Navigate to your Hyperledger Fabric network.
