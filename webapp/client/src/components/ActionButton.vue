@@ -88,6 +88,6 @@ export default {
 
 <style lang="scss" scoped>
   .v-btn {
-    font-family: Roboto,sans-serif!important;
+    font-family: Roboto, sans-serif !important;
   }
 </style>

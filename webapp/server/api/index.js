@@ -124,19 +124,19 @@ api.post('/chaincode/transaction', async (req, res, next) => {
 });
 
 // sdk implementation of invoking chaincode
-api.post('/chaincode/sdk/transaction', async (req, res, next) => {
-  try {
-    const channels = Array.from(gateway.client.channels.keys());
+// api.post('/chaincode/transaction', async (req, res, next) => {
+//   try {
+//     const channels = Array.from(gateway.client.channels.keys());
 
-    const network = await gateway.getNetwork(channels[0]);
-    const contract = await network.getContract(req.body.contract);
-    const response = await contract.submitTransaction(...req.body.args);
+//     const network = await gateway.getNetwork(channels[0]);
+//     const contract = await network.getContract(req.body.contract);
+//     const response = await contract.submitTransaction(...req.body.args);
 
-    res.send(response.toString());
-  } catch(e) {
-    res.status(500).json(e.message);
-  }
-});
+//     res.send(response.toString());
+//   } catch(e) {
+//     res.status(500).json(e.message);
+//   }
+// });
 
 api.post('/chaincode/install', async (req, res, next) => {
   execute({ ACTION: 'install' }).then(({ stdout })=> {
