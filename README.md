@@ -42,23 +42,23 @@ You are now ready for the bootcamp.
 
 Additionally, you may want to prepare the web app client and server in advance—although this is not required, as this will be done during the bootcamp.
 
-1. Export the [required files](./webapp/certs/README.md) from [Chainstack Platform](https://console.chainstack.com/).
+1. Export the [required files](./webapp/certs/README.md) from [Chainstack platform](https://console.chainstack.com/).
 
 1. Set up the web app client:
 
-  ```sh
-  cd webapp/client
-  npm i
-  npm run build
-  ```
+   ```sh
+   cd webapp/client
+   npm i
+   npm run build
+   ```
 
 1. Set up the web app server:
 
-  ```sh
-  cd webapp/server
-  npm i
-  npm start
-  ```
+   ```sh
+   cd webapp/server
+   npm i
+   npm start
+   ```
 
 ## Additional information
 
