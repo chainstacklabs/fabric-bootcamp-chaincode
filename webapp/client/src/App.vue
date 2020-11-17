@@ -50,8 +50,10 @@ export default {
 
   methods: {
     showAlertSnackBar(alert) {
-      this.alertMessage = alert;
-      this.showAlert = true;
+      if (alert) {
+        this.alertMessage = alert;
+        this.showAlert = true;
+      }
     },
   },
 };
