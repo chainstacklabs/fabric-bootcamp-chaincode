@@ -5,6 +5,7 @@
     >
       <template v-slot:activator="{ on }">
         <v-btn
+          small
           v-on="on"
           :icon="icon"
           :loading="isLoading"
@@ -84,3 +85,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .v-btn {
+    font-family: Roboto, sans-serif !important;
+  }
+</style>

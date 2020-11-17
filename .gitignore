@@ -43,10 +43,10 @@ typings/
 yarn-error.log*
 
 # fabric
-certs
-!webapp/certs/.keep
 wallets
 hlf
 chaincodes/*.tar.gz
 connection-profile.json
 connection-profile?.json
+/webapp/certs/*
+!/webapp/certs/README.md

@@ -45,9 +45,8 @@
             <code>
               Package ID: {{ item.package_id }}
               <ActionButton
-                icon
                 v-if="item.details.approvals && item.details.approvals[mspId] != true"
-                display="mdi-check"
+                display="Approve"
                 tooltip-content="Approve chaincode"
                 :action="{
                   action: 'post',
@@ -58,9 +57,8 @@
               ></ActionButton>
 
               <ActionButton
-                icon
                 v-else-if="!item.details.name"
-                display="mdi-check-all"
+                display="Commit"
                 tooltip-content="Commit chaincode"
                 :action="{
                   action: 'post',
