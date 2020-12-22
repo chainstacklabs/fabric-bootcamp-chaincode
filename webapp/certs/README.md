@@ -6,13 +6,16 @@ In the [Chainstack platform](https://console.chainstack.com/):
     - Navigate to your Hyperledger Fabric network.
     - Click **Details**.
     - Click **Export connection profile**.
+    - Move the exported file to the `webapp/certs/` directory.
 1. Orderer TLS certificate:
     - Navigate to the Hyperledger Fabric **Service nodes** tab from the network.
     - Access **Orderer**.
     - Click **Export TLS certificate**.
+    - Move the exported file to the `webapp/certs/` directory.
 1. Organization identity zip folder:
-    - Navigate to the Hyperledger Fabric **Peer nodes** tab from the network.
-    - Access your peer.
-    - Next to **Organization identity**, click **Export**.
-    - Unzip the downloaded folder.
-1. Move the exported files to the `webapp/certs/` directory.
+    - Navigate to your Hyperledger Fabric network.
+    - Click **Details**.
+    - Access Admin identity
+    - Click **Export**
+    - Unzip the downloaded folder
+    - Move `msp` subdirectory to the `webapp/certs/` directory.

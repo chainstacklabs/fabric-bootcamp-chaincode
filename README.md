@@ -34,7 +34,7 @@ Note that downloading the binaries will take some time.
 In the `webapp/server/.env` file, replace the `ORDERER_NAME`, `PEER_NAME`, and `MSP_ID` variables with:
 * `ORDERER_NAME` — the orderer name of the network you deployed your peer in. To access the orderer name, in the [Chainstack platform](https://console.chainstack.com/), from Hyperledger Fabric network, select **Service nodes** tab and click on **Orderer** to access its details page. Here you can copy the **Orderer name** value.
 * `PEER_NAME` — the name of the peer that you deployed. To access the peer name, in the [Chainstack platform](https://console.chainstack.com/), from Hyperledger Fabric network, select **Peer nodes** tab, click on your peer name to access its details page. Here you can copy the **Peer name** value.
-* `MSP_ID` — the Membership Service Provider identity (MSP ID) of the peer that you deployed. To access the MSP ID, in the [Chainstack platform](https://console.chainstack.com/), from Hyperledger Fabric network, select **Peer nodes** tab, click on your peer name to access its details page. Here you can copy the **MSP ID** value.
+* `MSP_ID` — the Membership Service Provider identity (MSP ID). To access the MSP ID, in the [Chainstack platform](https://console.chainstack.com/), from Hyperledger Fabric network, click **Details** link to open network details modal. Here you can copy the **MSP ID** value.
 
 You are now ready for the bootcamp.
 
