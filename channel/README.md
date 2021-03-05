@@ -1,9 +1,9 @@
 # Guide on installing a new Hyperleder Fabric channel
 
 ## Prerequisites
-Before we begin, ensure that you have exported the following files from the [Chainstack platform](https://console.chainstack.com/) for each organization you are planning to involve in the channel you're creating. Reference [Export files guide](../webapp/certs/README.md) for more information.
+Before we begin, ensure that you have exported the following files from the [Chainstack platform](https://console.chainstack.com/) for each organization you are planning to involve in the channel you're creating. Refer to [Export files guide](../webapp/certs/README.md) for more information.
 
-Note that you should store the exported files in their own individual cert directory, your webapp folder should look like this:
+Note that you should store the exported files in their own individual cert directories, your webapp folder should look like this:
 ```
 webapp
 |__ certs <-- Org1CertsFolder
@@ -23,7 +23,7 @@ webapp
   |__orderer-id-cert.pem
 ```
 ## Update values within the configtx.yaml
-1. Update and configure the channel's setting through the `/channel/configtx.yaml` file, sample values are provided for reference.
+1. Update and configure the channel's settings through the `/channel/configtx.yaml` file, Sample values are provided for reference.
 
 ## Create channel creation transaction
 1. Navigate to the `channel` directory.
@@ -66,7 +66,7 @@ export CORE_PEER_TLS_ROOTCERT_FILE="../../webapp/<< Org1CertsFolder >>/tlsca/<< 
 export CORE_PEER_MSPCONFIGPATH="../../webapp/<< Org1CertsFolder >>/msp"
 export CORE_PEER_ADDRESS="<< Org1PeerName >>"
 ```
-1. Execute command for org 1 to join channel
+1. Execute command for Org 1 to join channel
 ```
 peer channel join -b newchannel.block
 ```
@@ -82,7 +82,7 @@ export CORE_PEER_TLS_ROOTCERT_FILE="../../webapp/<< Org2CertsFolder >>/tlsca/<< 
 export CORE_PEER_MSPCONFIGPATH="../../webapp/<< Org2CertsFolder >>/msp"
 export CORE_PEER_ADDRESS="<< Org2PeerName >>"
 ```
-1. Execute command for org 2 to join channel
+1. Execute command for Org 2 to join channel
 ```
 peer channel join -b newchannel.block
 ```
