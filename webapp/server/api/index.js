@@ -82,9 +82,9 @@ api.get('/network', (req, res, next) => {
 
 api.get('/chaincode/:chaincode', async (req, res, next) => {
   try {
-    const channels = Array.from(gateway.client.channels.keys());
+    const { CHANNEL_ID } = envfile.parseFileSync(`${rootPath}/webapp/server/.env`);
 
-    const network = await gateway.getNetwork(channels[0]);
+    const network = await gateway.getNetwork(CHANNEL_ID);
     const contract = await network.getContract(req.params.chaincode);
     const response = await contract.evaluateTransaction('org.hyperledger.fabric:GetMetadata');
 

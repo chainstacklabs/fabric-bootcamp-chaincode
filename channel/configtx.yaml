@@ -1,0 +1,147 @@
+################################################################################
+#
+#   ORGANIZATIONS
+#
+#   This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+#   In the example below, we added 2 organizations which will be members of the
+#   organizations. Take note that we will need to set the msp folder directory 
+#   for each individual org. 
+#
+#   Sample values:
+#   << Host >>: nd-446-153-198.rg-561-582.p2pify.com
+#   << ID >>: RG-561-582-MSP
+#   << Name >>: rg-561-582
+#   << MSP Dir >>:  ../webapp/certs/msp
+#   << OrdererEndpoint >>: nd-021-888-407.rg-561-582.p2pify.com:7050
+#   << OrgName >>: RG-561-582-MSP
+#
+################################################################################
+Organizations:
+    - &Org1
+        AdminPrincipal: Role.MEMBER
+        AnchorPeers:
+            - Host: << Host >>
+              Port: 7051
+        ID: << ID >>
+        Name: << Name >>
+        MSPDir: << MSPDir >>
+        OrdererEndpoints:
+            - << OrdererEndpoint >>
+        Policies:
+            Admins:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin")
+            Endorsement:
+                Type: Signature
+                Rule: OR("<< Orgname >>.peer","<< Orgname >>.member")
+            Readers:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin","<< Orgname >>.peer","<< Orgname >>.client","<< Orgname >>.member")
+            Writers:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin","<< Orgname >>.client","<< Orgname >>.member")
+
+    - &Org2
+        AdminPrincipal: Role.MEMBER
+        AnchorPeers:
+            - Host: << Host >>
+              Port: 7051
+        ID: << ID >>
+        Name: << Name >>
+        MSPDir: << MSPDir >>
+        OrdererEndpoints:
+            - << OrdererEndpoint >>
+        Policies:
+            Admins:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin")
+            Endorsement:
+                Type: Signature
+                Rule: OR("<< Orgname >>.peer","<< Orgname >>.member")
+            Readers:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin","<< Orgname >>.peer","<< Orgname >>.client","<< Orgname >>.member")
+            Writers:
+                Type: Signature
+                Rule: OR("<< Orgname >>.admin","<< Orgname >>.client","<< Orgname >>.member")
+
+################################################################################
+#
+#   APPLICATION
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for application related parameters.
+#
+################################################################################
+Application: &ApplicationDefaults
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+    Capabilities:
+        V2_0: true
+
+################################################################################
+#
+#   CHANNEL
+#
+#   This section defines the values to encode into a config transaction or
+#   genesis block for channel related parameters.
+#
+#   Sample values:
+#   << AdminOrgName >>: rg-561-582
+#
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Admins:
+            Rule: AND("<< AdminOrgName >>-ord-MSP.admin")
+            Type: Signature
+        Endorsement:
+            Rule: MAJORITY Endorsement
+            Type: ImplicitMeta
+        LifecycleEndorsement:
+            Rule: MAJORITY Endorsement
+            Type: ImplicitMeta
+        Readers:
+            Rule: ANY Readers
+            Type: ImplicitMeta
+        Writers:
+            Rule: ANY Writers
+            Type: ImplicitMeta
+    Capabilities:
+        V2_0: true
+################################################################################
+#
+#  PROFILE
+#
+#  Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+Profiles:
+    newchannel:
+        <<: *ChannelDefaults
+        Consortium: MyConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+            Capabilities:
+                V2_0: true
