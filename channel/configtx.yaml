@@ -1,11 +1,14 @@
 ################################################################################
 #
-# Section: Organizations
-#   - This section defines the different organizational identities which will
+#   ORGANIZATIONS
+#
+#   This section defines the different organizational identities which will
 #   be referenced later in the configuration.
-#   - In the example below we added 2 organizations which will be memebers of the
-#     organizations. Take know that we will need to set the msp folder directory 
-#     for each individual org. 
+#
+#   In the example below, we added 2 organizations which will be members of the
+#   organizations. Take note that we will need to set the msp folder directory 
+#   for each individual org. 
+#
 #   Sample values:
 #   << Host >>: nd-446-153-198.rg-561-582.p2pify.com
 #   << ID >>: RG-561-582-MSP
@@ -68,7 +71,7 @@ Organizations:
 #
 #   APPLICATION
 #
-#   - This section defines the values to encode into a config transaction or
+#   This section defines the values to encode into a config transaction or
 #   genesis block for application related parameters.
 #
 ################################################################################
@@ -125,9 +128,9 @@ Channel: &ChannelDefaults
         V2_0: true
 ################################################################################
 #
-# Profile
+#  PROFILE
 #
-#   - Different configuration profiles may be encoded here to be specified
+#  Different configuration profiles may be encoded here to be specified
 #   as parameters to the configtxgen tool
 #
 ################################################################################
